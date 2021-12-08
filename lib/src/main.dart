@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_final/src/data/coins_api.dart';
 import 'package:flutter_final/src/data/coins_db_api.dart';
+import 'package:flutter_final/src/actions/db_actions.dart';
 import 'package:flutter_final/src/epics/app_epics.dart';
 import 'package:flutter_final/src/models/app_states.dart';
 import 'package:flutter_final/src/presentation/home_page.dart';
@@ -21,7 +22,6 @@ void main() {
     middleware: <Middleware<AppState>>[
       (Store<AppState> store, dynamic action, NextDispatcher next) {
         next(action);
-        print(store.state);
       },
       EpicMiddleware<AppState>(appEpics.epics),
     ],
@@ -32,11 +32,11 @@ void main() {
 
 class CryptoApp extends StatelessWidget {
   const CryptoApp({Key? key, required this.store}) : super(key: key);
-
   final Store<AppState> store;
 
   @override
   Widget build(BuildContext context) {
+    store.dispatch(GetCryptoFromDB());
     return StoreProvider(
       store: store,
       child: MaterialApp(
@@ -49,19 +49,14 @@ class CryptoApp extends StatelessWidget {
                 title: Text('Your crypto app'),
                 bottom: TabBar(
                   tabs: [
-                    Tab(text: 'All Cryptos'),
+                    Tab(text: 'All Cryptos', ),
                     Tab(text: 'Saved'),
                   ],
-
                 ),
               ),
               body: TabBarView(
-                children: [
-                  const HomePage(),
-                  const FavouritesPage()
-                ],
+                children: [const HomePage(), const FavouritesPage()],
               ),
-
             ),
           )),
     );

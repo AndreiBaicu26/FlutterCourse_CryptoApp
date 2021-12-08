@@ -1,5 +1,5 @@
 import 'package:flutter_final/src/models/crypto_coin.dart';
-//part of models;
+//import 'package:freezed_annotation/freezed_annotation.dart';
 
 class AppState {
   AppState({
@@ -21,3 +21,13 @@ class AppState {
     );
   }
 }
+
+// @freezed
+// class AppState with _$AppState {
+//   const factory AppState({
+//     final required List<CryptoCoin> cryptoCoins;
+//     final required List<CryptoCoin> favoriteCryptoCoins;
+//     final required bool isLoading;
+// }) = AppState$;
+//
+// }

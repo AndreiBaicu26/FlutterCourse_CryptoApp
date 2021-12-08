@@ -16,12 +16,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ScrollController _controller = ScrollController();
+  int _startFetchParam = 0;
+
   @override
   void initState() {
     super.initState();
-
     final Store store = StoreProvider.of<AppState>(context, listen: false);
-    store.dispatch(GetCryptos(10, 10));
+
+    if (store.state.cryptoCoins.length == 0) {
+      store.dispatch(GetCryptos(_startFetchParam));
+    }
+
+    _controller.addListener(() {
+      if (!store.state.isLoading && _controller.offset > _controller.position.maxScrollExtent * .7) {
+        _startFetchParam = _startFetchParam + 15;
+        store.dispatch(GetCryptos(_startFetchParam));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   void onSave(dynamic action) {
@@ -35,27 +53,39 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final Store store = StoreProvider.of<AppState>(context, listen: false);
+
     return CryptoSummaryContainer(
       builder: (BuildContext context, List<CryptoCoin> coins) {
-        return ListView.builder(
-          itemCount: coins.length,
-
-          itemBuilder: (BuildContext context, int index) {
-            final CryptoCoin coin = coins[index];
-
-            return ListTile(
-              title: Text(coin.name),
-              subtitle: Text('${coin.price}\$'),
-              trailing: IconButton(
-                icon: Icon(Icons.star),
-                onPressed: () {
-                  final Store store = StoreProvider.of<AppState>(context, listen: false);
-                  store.dispatch(SaveCrypto(coin, onSave));
+        return CustomScrollView(
+          controller: _controller,
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  final CryptoCoin coin = coins[index];
+                  return ListTile(
+                    title: Text(coin.name),
+                    subtitle: Text('${coin.price}\$'),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.star,
+                        color: coin.isSaved ? Colors.green : null,
+                      ),
+                      onPressed: () {
+                        store.dispatch(SaveCrypto(coin, onSave));
+                      },
+                    ),
+                  );
                 },
+                childCount: store.state.cryptoCoins.length,
               ),
-            );
-
-          },
+            ),
+            if (store.state.isLoading)
+              const SliverFillRemaining(
+                child: Center(child: CircularProgressIndicator()),
+              ),
+          ],
         );
       },
     );

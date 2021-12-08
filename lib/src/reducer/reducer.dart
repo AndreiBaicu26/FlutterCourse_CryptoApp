@@ -18,9 +18,15 @@ AppState reducer(AppState appState, dynamic action) {
 
   if (action is GetCryptoFromDBSuccessful) {
     final cryptos = <CryptoCoin>[];
-
-    cryptos.addAll(appState.favoriteCryptoCoins);
     cryptos.addAll(action.cryptos);
+    return appState.copyWith(favoriteCryptoCoins: cryptos);
+  } else if (action is SaveCryptoSuccessful) {
+    final List<CryptoCoin> cryptos = <CryptoCoin>[];
+    final CryptoCoin savedCoin = action.coin;
+    print('a');
+    cryptos.addAll(appState.cryptoCoins);
+    int index = cryptos.indexWhere((CryptoCoin coin) => coin.id == action.coin.id);
+    cryptos[index] = CryptoCoin(savedCoin.id, savedCoin.name, savedCoin.symbol, savedCoin.price, true);
     return appState.copyWith(cryptoCoins: cryptos);
   }
 

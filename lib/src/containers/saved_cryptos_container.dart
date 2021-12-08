@@ -13,7 +13,7 @@ class SavedCryptosContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, List<CryptoCoin>>(
       converter: (Store<AppState> store) {
-        return store.state.cryptoCoins;
+        return store.state.favoriteCryptoCoins;
       },
       builder: builder,
     );

@@ -24,7 +24,7 @@ class AppEpics {
   Stream<dynamic> getCryptos(Stream<GetCryptos> actions, EpicStore<AppState> store) {
     return actions //
         .flatMap((GetCryptos action) => Stream<void>.value(null)
-            .asyncMap((_) => _api.getCoins(action.start, action.limit))
+            .asyncMap((_) => _api.getCoins(action.start))
             .map<Object>((List<CryptoCoin> coins) => GetCryptosSuccessful(coins))
             .onErrorReturnWith((error, stackTrace) => GetCryptosError(error)));
   }

@@ -1,10 +1,9 @@
 import 'package:flutter_final/src/models/crypto_coin.dart';
 
 class GetCryptos{
-  const GetCryptos(this.start, this.limit);
+  const GetCryptos(this.start);
 
   final int start;
-  final int limit;
 }
 
 class GetCryptosSuccessful {
