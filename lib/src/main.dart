@@ -17,7 +17,7 @@ void main() {
 
   final AppEpics appEpics = AppEpics(coinsApi, coinsDBApi);
 
-  final store = Store<AppState>(
+  final Store<AppState> store = Store<AppState>(
     reducer,
     middleware: <Middleware<AppState>>[
       (Store<AppState> store, dynamic action, NextDispatcher next) {
@@ -25,7 +25,7 @@ void main() {
       },
       EpicMiddleware<AppState>(appEpics.epics),
     ],
-    initialState: AppState(),
+    initialState: const AppState(),
   );
   runApp(CryptoApp(store: store));
 }
@@ -36,26 +36,27 @@ class CryptoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    store.dispatch(GetCryptoFromDB());
+    store.dispatch(const GetCryptoFromDB());
     return StoreProvider(
       store: store,
       child: MaterialApp(
           theme: ThemeData.dark(),
           home: DefaultTabController(
             length: 2,
-            initialIndex: 0,
             child: Scaffold(
               appBar: AppBar(
-                title: Text('Your crypto app'),
-                bottom: TabBar(
-                  tabs: [
-                    Tab(text: 'All Cryptos', ),
+                title: const Text('Your crypto app'),
+                bottom: const TabBar(
+                  tabs: <Widget>[
+                    Tab(
+                      text: 'All Cryptos',
+                    ),
                     Tab(text: 'Saved'),
                   ],
                 ),
               ),
-              body: TabBarView(
-                children: [const HomePage(), const FavouritesPage()],
+              body: const TabBarView(
+                children: <Widget>[HomePage(), FavouritesPage()],
               ),
             ),
           )),

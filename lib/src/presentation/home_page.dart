@@ -5,7 +5,6 @@ import 'package:flutter_final/src/actions/get_cryptos.dart';
 import 'package:flutter_final/src/models/app_states.dart';
 import 'package:flutter_final/src/models/crypto_coin.dart';
 import 'package:flutter_final/src/containers/crypto_summary_container.dart';
-import 'package:flutter_final/src/data/coins_db_api.dart';
 import 'package:flutter_final/src/actions/db_actions.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,14 +21,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    final Store store = StoreProvider.of<AppState>(context, listen: false);
+    final Store<AppState> store = StoreProvider.of<AppState>(context, listen: false);
 
-    if (store.state.cryptoCoins.length == 0) {
+    if (store.state.cryptoCoins.isEmpty) {
       store.dispatch(GetCryptos(_startFetchParam));
     }
 
     _controller.addListener(() {
-      if (!store.state.isLoading && _controller.offset > _controller.position.maxScrollExtent * .7) {
+      if (!store.state.isLoading &&
+          _controller.offset > _controller.position.maxScrollExtent * .7) {
         _startFetchParam = _startFetchParam + 15;
         store.dispatch(GetCryptos(_startFetchParam));
       }
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final Store store = StoreProvider.of<AppState>(context, listen: false);
+    final Store<AppState> store = StoreProvider.of<AppState>(context, listen: false);
 
     return CryptoSummaryContainer(
       builder: (BuildContext context, List<CryptoCoin> coins) {

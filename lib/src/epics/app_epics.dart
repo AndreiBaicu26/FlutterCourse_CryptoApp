@@ -1,9 +1,9 @@
 import 'package:flutter_final/src/actions/get_cryptos.dart';
+import 'package:flutter_final/src/actions/db_actions.dart';
 import 'package:flutter_final/src/data/coins_api.dart';
+import 'package:flutter_final/src/data/coins_db_api.dart';
 import 'package:flutter_final/src/models/app_states.dart';
 import 'package:flutter_final/src/models/crypto_coin.dart';
-import 'package:flutter_final/src/actions/db_actions.dart';
-import 'package:flutter_final/src/data/coins_db_api.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -21,25 +21,31 @@ class AppEpics {
     ]);
   }
 
-  Stream<dynamic> getCryptos(Stream<GetCryptos> actions, EpicStore<AppState> store) {
+  Stream<dynamic> getCryptos(
+      Stream<GetCryptos> actions, EpicStore<AppState> store) {
     return actions //
         .flatMap((GetCryptos action) => Stream<void>.value(null)
             .asyncMap((_) => _api.getCoins(action.start))
-            .map<Object>((List<CryptoCoin> coins) => GetCryptosSuccessful(coins))
-            .onErrorReturnWith((error, stackTrace) => GetCryptosError(error)));
+            .map<Object>(
+                (List<CryptoCoin> coins) => GetCryptosSuccessful(coins))
+            .onErrorReturnWith((Object error, StackTrace stackTrace) => GetCryptosError(error)));
   }
 
-  Stream<dynamic> getCryptosFromDB(Stream<GetCryptoFromDB> actions, EpicStore<AppState> store) {
+  Stream<dynamic> getCryptosFromDB(
+      Stream<GetCryptoFromDB> actions, EpicStore<AppState> store) {
     return actions //
         .flatMap((GetCryptoFromDB action) => Stream<void>.value(null)
-        .asyncMap((_) => _coinsDBApi.getFavCrypto())
-        .map<Object>((List<CryptoCoin> coins) => GetCryptoFromDBSuccessful(coins)));
+            .asyncMap((_) => _coinsDBApi.getFavCrypto())
+            .map<Object>(
+                (List<CryptoCoin> coins) => GetCryptoFromDBSuccessful(coins)));
   }
 
-  Stream<dynamic> saveCryptosToDB(Stream<SaveCrypto> actions, EpicStore<AppState> store) {
+  Stream<dynamic> saveCryptosToDB(
+      Stream<SaveCrypto> actions, EpicStore<AppState> store) {
     return actions //
         .flatMap((SaveCrypto action) => Stream<void>.value(null)
-        .asyncMap((_) => _coinsDBApi.addCryptoToDB(action.coin))
-        .map<void>((CryptoCoin coin) => SaveCryptoSuccessful(coin)).doOnData(action.result));
-    }
+            .asyncMap((_) => _coinsDBApi.addCryptoToDB(action.coin))
+            .map<void>((CryptoCoin coin) => SaveCryptoSuccessful(coin))
+            .doOnData(action.result));
+  }
 }

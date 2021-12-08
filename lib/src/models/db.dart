@@ -2,7 +2,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CryptoDatabase {
-  static final CryptoDatabase _db = new CryptoDatabase._internal();
+  static final CryptoDatabase _db = CryptoDatabase._internal();
 
   CryptoDatabase._internal();
 
@@ -18,7 +18,7 @@ class CryptoDatabase {
   Future<Database> _init() async {
     return await openDatabase(
       join(await getDatabasesPath(), 'crypto.db'),
-      onCreate: (db, version) {
+      onCreate: (Database db, int version) {
         db.execute(
           'CREATE TABLE cryptos(id INTEGER PRIMARY KEY, name TEXT, symbol TEXT, price REAL);',
         );

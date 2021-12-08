@@ -1,4 +1,3 @@
-import 'package:flutter_final/src/models/db.dart';
 import 'package:flutter_final/src/models/crypto_coin.dart';
 
 class SaveCrypto {

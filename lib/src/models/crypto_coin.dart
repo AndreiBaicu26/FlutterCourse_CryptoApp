@@ -8,7 +8,7 @@ class CryptoCoin {
   final bool isSaved;
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'id': id,
       'name': name,
       'symbol': symbol,

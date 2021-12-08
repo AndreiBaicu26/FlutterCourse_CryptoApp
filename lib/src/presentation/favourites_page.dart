@@ -5,7 +5,6 @@ import 'package:flutter_final/src/actions/db_actions.dart';
 import 'package:flutter_final/src/models/app_states.dart';
 import 'package:flutter_final/src/models/crypto_coin.dart';
 import 'package:flutter_final/src/containers/saved_cryptos_container.dart';
-import 'package:flutter_final/src/data/coins_db_api.dart';
 
 class FavouritesPage extends StatefulWidget {
   const FavouritesPage({Key? key}) : super(key: key);
@@ -19,8 +18,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
   void initState() {
     super.initState();
 
-    final Store store = StoreProvider.of<AppState>(context, listen: false);
-    store.dispatch(GetCryptoFromDB());
+    final Store<AppState> store = StoreProvider.of<AppState>(context, listen: false);
+    store.dispatch(const GetCryptoFromDB());
   }
 
   @override

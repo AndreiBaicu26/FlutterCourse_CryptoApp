@@ -18,8 +18,9 @@ class CoinsDBApi {
     final Database db = await CryptoDatabase.instance.database;
     final List<Map<String, dynamic>> maps = await db.query('cryptos;');
 
-    return List.generate(maps.length, (i) {
-      return CryptoCoin(maps[i]['id'], maps[i]['name'], maps[i]['symbol'], maps[i]['price'], false);
+    return List<CryptoCoin>.generate(maps.length, (int i) {
+      return CryptoCoin(maps[i]['id'] as int, maps[i]['name'] as String, maps[i]['symbol'] as String,
+          maps[i]['price'] as double, false);
     });
   }
 }

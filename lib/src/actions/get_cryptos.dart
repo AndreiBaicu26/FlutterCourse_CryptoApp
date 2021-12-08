@@ -1,6 +1,6 @@
 import 'package:flutter_final/src/models/crypto_coin.dart';
 
-class GetCryptos{
+class GetCryptos {
   const GetCryptos(this.start);
 
   final int start;
